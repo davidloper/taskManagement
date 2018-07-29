@@ -1,0 +1,5 @@
+@include('includes.header')
+@include('navbars.navbar')
+@yield('toggleBar')
+@yield('content')
+@include('includes.footer')

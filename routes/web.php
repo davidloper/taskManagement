@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Auth::routes();
+
+Route::resource('/home', 'HomeController');
+Route::get('/logout','Auth\LoginController@logout')->name('logout');
+
+Route::resource('/manageTask','ManageTaskController');
