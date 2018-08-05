@@ -16,10 +16,10 @@
 
 <style>
 footer {
-	position:fixed;
-	bottom:0;
-	width:100%;
-	padding:1% 1% 1%;
+	/*position:fixed;*/
+	/*bottom:0;*/
+	/*/width:100%;*/
+	/*padding:1% 1% 1%;*/
 	background-color: rgb(220,220,220); 
 }
 </style>

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Task;
 
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 use Auth;
+
 
 class HomeController extends Controller
 {
@@ -27,47 +28,52 @@ class HomeController extends Controller
      */
     public function index()
     {   
+        //dd(Carbon::now('Asia/Kuala_Lumpur')->addDay(2));
         $userId = Auth::user()->id;
         $allTasks = Task::all();
-        $newTasks = $allTasks->where('ignored','!=',1)->where('started','!=',1)->where('completed','!=',1);
-        $startedTasks = $allTasks->where('started',1)->where('completed','!=',1);
+
+        $completedTask = Task::where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
+
+        $newTasks = $allTasks->where('status','new');
+        $startedTasks = $allTasks->where('status','started');
         // $ignoredTasks = Task::
         // $taskStatistic;
-        $taskStatistic ['ignored'] = Task::where('user_id',$userId)->sum('ignored');
-        $taskStatistic ['completed'] = Task::where('user_id',$userId)->sum('completed');
+        //$taskStatistic ['ignored'] = Task::where('user_id',$userId)->sum('ignored');
+        //$taskStatistic ['completed'] = Task::where('user_id',$userId)->sum('completed');
+
+        // dd($newTasks);
         
 
-        return view('home',compact('allTasks','newTasks','startedTasks','taskStatistic'));
+        return view('home',compact('completedTask','newTasks','startedTasks','taskStatistic'));
     }
     public function update(Request $request){
         
         $taskId = basename(request()->path());
-        // dd('update');
-        //dd($request.'->ignored');
-        $success = 1;
-        if($request->ignored){
-            $task = Task::find($taskId);
-            $task->ignored = $request->ignored;
-            $task->update(); 
+    
+        if($request->status === 'ignored'){
+            self::updateStatus($taskId,$request);
+            $request->session()->flash('success','Task Successfully Ingored!');
         }
-        if($request->started){
-            $task = Task::find($taskId);
-            $task->started = $request->started;
-            $task->update();
+        if($request->status === 'started'){
+            self::updateStatus($taskId,$request);
+            $request->session()->flash('success','Task Successfully Started!');
         }
-        if($request->completed){
-            $task = Task::find($taskId);
-            $task->completed = $request->completed;
-            $task->update();
+        if($request->status === 'awaiting approval'){
+            self::updateStatus($taskId,$request);
+            $request->session()->flash('success','Task Successfully Completed!');
         }
-        if($request->remove){
-            $task = Task::find($taskId);
-            $task->ignored = null;
-            $task->started = null;
+        if($request->status === 'removed'){
+            self::updateStatus($taskId,$request);
+            $request->session()->flash('success','Task Successfully Removed!');
         }
 
-        $request->session()->flash('success','yayyy success!');
+        $request->session()->flash('error','Something went wrong!');
         
     return redirect('home');
+    }
+    function updateStatus($taskId,$request){
+        $task = Task::find($taskId);
+            $task->status = $request->status;
+            $task->update();
     }
 }

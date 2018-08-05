@@ -16,5 +16,6 @@ Auth::routes();
 
 Route::resource('/home', 'HomeController');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
+Route::get('/','IndexController@index');
 
-Route::resource('/manageTask','ManageTaskController');
+Route::resource('/task','TaskController');
