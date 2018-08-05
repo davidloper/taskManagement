@@ -1,9 +1,10 @@
+
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     		<span class="navbar-toggler-icon"></span>
   		</button>
-	  	<a class="navbar-brand" href="#">Dashboard</a>
+	  	<a class="navbar-brand" href="/home">Dashboard</a>
 	  	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
 	    	<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		      	{{-- <li class="nav-item active">
@@ -11,13 +12,13 @@
 		      	</li> --}}
 		      	<li class="nav-item">
 			      	<div class="dropdown">
-					  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+					  <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
 					    Manage Task
 					  </button>
 					  <div class="dropdown-menu">
-					    <a class="dropdown-item" href="#">Show Task</a>
-					    <a class="dropdown-item" href="manageTask/create">Create Task</a>
-					    <a class="dropdown-item" href="#">Edit Task</a>
+					    <a class="dropdown-item" href="/task">Show Task</a>
+					    <a class="dropdown-item" href="/task/create">Create Task</a>
+					    {{-- <a class="dropdown-item" href="#">Edit Task</a> --}}
 					  </div>
 					</div>
 				</li>
