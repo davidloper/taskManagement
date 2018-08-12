@@ -19,3 +19,5 @@ Route::get('/logout','Auth\LoginController@logout')->name('logout');
 Route::get('/','IndexController@index');
 
 Route::resource('/task','TaskController');
+
+Route::post('/comment','CommentController@store');

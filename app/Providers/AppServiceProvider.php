@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Schema;
 
+use App\Task;
+use App\Notification;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         schema::defaultStringLength(191);
+
+        Task::observe(\App\Observers\TaskObserver::class);
+
+        $this->notifications();
     }
 
     /**
@@ -27,4 +33,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+    public function notifications(){
+    view()->composer('navbars.navbar', function() {
+        $notifications = Notification::notSeen()->limit(10)->get();
+        view()->share('notifications', $notifications);
+    });
+  }
 }

@@ -34,8 +34,8 @@ class HomeController extends Controller
 
         $completedTask = Task::where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
 
-        $newTasks = $allTasks->where('status','new');
-        $startedTasks = $allTasks->where('status','started');
+        $newTasks = $allTasks->where('status','New');
+        $startedTasks = $allTasks->where('status','Started');
         // $ignoredTasks = Task::
         // $taskStatistic;
         //$taskStatistic ['ignored'] = Task::where('user_id',$userId)->sum('ignored');

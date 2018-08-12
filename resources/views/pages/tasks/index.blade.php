@@ -25,23 +25,27 @@
 								<td>{{$val->description}}</td>
 								@php
 
-									if($val->status === 'new'){
+									if($val->status === 'New'){
 									$color = 'bg-info';
 									}
-									elseif($val->status === 'started'){
+									elseif($val->status === 'Started'){
 									$color = 'bg-primary';
 									}
-									elseif($val->status === 'ignored'){
+									elseif($val->status === 'Ignored'){
 									$color = 'bg-secondary';
 									}
-									elseif($val->status === 'awaiting approval'){
+									elseif($val->status === 'Awaiting Approval'){
 									$color = 'bg-warning';
 									}
-									elseif($val->status === 'rejected'){
+									elseif($val->status === 'Rejected'){
 									$color = 'bg-danger';
 									}
-									elseif($val->status === 'approved'){
+									elseif($val->status === 'Approved'){
 									$color = 'bg-success';
+									}
+									else{
+										// dd($val->sata)
+										$color = '';
 									}
 
 								@endphp

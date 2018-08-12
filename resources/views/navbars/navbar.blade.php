@@ -22,9 +22,18 @@
 					  </div>
 					</div>
 				</li>
-		      	<li class="nav-item">
-		        	<a class="nav-link" href="#">Notification</a>
-	      		</li>
+				<li class="nav-item">
+			      	<div class="dropdown">
+					  <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+					    Notification
+					  </button>
+					  <div class="dropdown-menu">
+					  	@foreach($notifications as $notification)
+				    		<a class="dropdown-item" href="/task/{{$notification->task_id}}">{{$notification->title}}</a>
+				    	@endforeach
+					  </div>
+					</div>
+				</li>
 	    	</ul>
 	    	<form class="form-inline my-2 my-lg-0">
 	      		<input class="form-control mr-sm-2" type="search" placeholder="Search Task" aria-label="Search Task">
