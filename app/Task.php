@@ -16,4 +16,29 @@ class Task extends Model
     	'duration_type',
     	'status',
     ];
+    
+    
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    public function comment(){
+        return $this->hasMany(Comment::class);
+    }
+    public function notification(){
+        return $this->hasOne(Notification::class);
+    }
+
+    public function getPriorityAttribute($value){
+        if($value == 1){
+            return 'Low';
+        }elseif($value == 2){
+            return 'Medium';
+        }elseif($value == 3){
+            return 'High';
+        }
+    }
+    public function getStatusAttribute($value){
+        return ucwords($value);
+    }
+
 }

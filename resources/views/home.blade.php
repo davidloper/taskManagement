@@ -32,20 +32,21 @@
             <div class="col-lg-12">
                 <div class="card card-body bg-light">
                     <a class="text-info"><h4><strong>New Task</strong></h4></a>
-                    <hr style="border: 2px solid lightblue;">
-                    <table>
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 @if(!$newTasks->isEmpty())
                                     <th> No. </th> 
                                     <th> Title </th>
                                     <th> Description </th>
+                                    <th></th>
                                 @else
                                 <th class="ta-mid-grey">You have no new task!</th>
                                 @endif
                              <tr>
                         </thead>
                         <tbody>
+                            {{-- {{dd($newTasks)}} --}}
                             @foreach($newTasks as $task)
                                 <tr>
                                     <td> {{$task->id}} </td>
@@ -78,14 +79,14 @@
             <div class="col-lg-12">
                 <div class="card card-body bg-light">
                     <a class="text-primary"><h4><strong>Started Task</strong></h4></a>
-                    <hr style="border: 2px solid blue">
-                    <table>
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 @if(!$startedTasks->isEmpty())
                                     <th> No. </th>
                                     <th> Title </th>
                                     <th style="width:600px"> Description </th>
+                                    <th></th>
                                 @else
                                     <th class="ta-mid-grey">You have no started task!</th>
                                 @endif
@@ -147,8 +148,7 @@
             <div class="col-lg-12">
                 <div class="card card-body bg-light">
                     <a class="text-success"><h4><strong>Completed Task</strong></h4></a>
-                    <hr style="border: 2px solid lightgreen">
-                    <table>
+                    <table class="table">
                         <thead>
                             <tr>
                                 @if(!$completedTask->isEmpty())
@@ -164,18 +164,18 @@
                         </thead>
                         <tbody>
                             @foreach($completedTask as $task)
-                                <tr>
+                            @php
+                            $class = '';
+                            $task->status === 'Awaiting Approval'? $color = 'info': '';
+                            $task->status === 'Rejected'? $color = 'danger':'';
+                            $task->status === 'Approved'? $color = 'success':'';
+                            @endphp
+                                <tr class="{{$color}}">
                                     {{-- <td> {{$task->user_id}} </td> --}}
                                     <td> {{$task->title}} </td>
                                     <td> {{$task->description}} </td>
                                     <td>{{$task->updated_at->format('d M Y')}}</td>
-                                    @if($task->status === 'awaiting approval')
-                                    <td><button class="btn btn-warning status-btn" style="padding:0px 8px 0px">{{$task->status}}</button></td>
-                                    @elseif($task->status === 'rejected')
-                                    <td><button class="btn btn-danger status-btn"  style="padding:0px 38px 0px">{{$task->status}}</button></td>
-                                    @elseif($task->status === 'approved')
-                                    <td><button class="btn btn-success btn-sm status-btn" style="padding:0px 45px 0px">{{$task->status}}</button></td>
-                                    @endif
+                                    <td>{{$task->status}}</td>
                                     {{-- <hr> --}}
                                 </tr>
 

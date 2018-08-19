@@ -14,8 +14,32 @@
 
 Auth::routes();
 
+#guest route
+Route::middleware(['guest'])->group(function(){
+	Route::view('/','index');
+});
+
 Route::resource('/home', 'HomeController');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
-Route::get('/','IndexController@index');
 
-Route::resource('/task','TaskController');
+#setting
+Route::prefix('setting')->group(function(){
+	Route::post('createNewProject','SettingController@createNewProject');
+	Route::post('switchProject','SettingController@switchProject');
+	Route::post('findProject','SettingController@findProject');
+	Route::post('findUser','SettingController@findUser');
+	Route::get('','SettingController@index');
+	
+});
+#task
+Route::prefix('task')->group(function(){
+	Route::get('/autoComplete','TaskController@autoComplete');
+
+});
+	Route::resource('/task','TaskController');
+
+#comment
+Route::post('/comment','CommentController@store');
+
+#notification
+Route::get('/notifications/markAsSeen','NotificationController@markAsSeen');
