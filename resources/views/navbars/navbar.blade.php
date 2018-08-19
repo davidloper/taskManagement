@@ -45,7 +45,7 @@
 		      		<a class="btn btn-outline-success my-2 my-sm-0" href="">Search</a>
 	      		{{-- </form> --}}
 	    	</div>
-	    	<a style="padding-left: 2%"class="navbar-brand" href="">Setting</a>
+	    	<a style="padding-left: 2%"class="navbar-brand" href="/setting">Setting</a>
 			<a style="padding-left: 2%"class="navbar-brand" href="/logout">Logout</a>
 
 	  	</div>
