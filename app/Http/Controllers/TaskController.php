@@ -44,9 +44,20 @@ class TaskController extends Controller
     }
     public function show($id,Request $request){
         $task = Task::find($id);
+        $notification = $task->notification;
+        $notification->seen = 1;
+        $notification->save();
+        
         $comments = $task->comment;
 
         return view('pages.tasks.show',compact('task','comments'));
+    }
+    public function autoComplete(Request $request){
+        // \Log::debug($request);
+        $id = $request->id;
+        $task = Task::where('id','LIKE','%'.$id.'%')->limit(5)->get();
+        \Log::debug($task);
+        return response()->json($task);
     }
 
 }

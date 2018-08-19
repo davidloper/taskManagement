@@ -24,6 +24,9 @@ class Task extends Model
     public function comment(){
         return $this->hasMany(Comment::class);
     }
+    public function notification(){
+        return $this->hasOne(Notification::class);
+    }
 
     public function getPriorityAttribute($value){
         if($value == 1){

@@ -14,11 +14,22 @@
 
 Auth::routes();
 
+#guest route
+Route::middleware(['guest'])->group(function(){
+	Route::view('/','index');
+});
+
 Route::resource('/home', 'HomeController');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
-// Route::get('/','IndexController@index');
-Route::view('/','index');
 
-Route::resource('/task','TaskController');
+#task
+Route::prefix('task')->group(function(){
+	Route::get('/autoComplete','TaskController@autoComplete');
+	Route::resource('','TaskController');
+});
 
+#comment
 Route::post('/comment','CommentController@store');
+
+#notification
+Route::get('/notifications/markAsSeen','NotificationController@markAsSeen');
