@@ -18,7 +18,7 @@ class TaskController extends Controller
     	$this->middleware('auth');
     }
 
-    public function index(){
+    public function pages(){
         $tasks = Task::all();
         $tasks = $tasks->groupBy(function($date){
             return Carbon::parse($date->created_at)->format('M Y');

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-
+    
     <style>
         .pad-top-3p{
             padding-top:3%;
@@ -17,6 +17,7 @@
             /*padding:1px 5px 1px;*/
         }
     </style>
+    {{-- {{dd(route('task.test'))}} --}}
     <div class="container-fluid">
         {{-- {{dd($success)}} --}}
         @if(session('success'))

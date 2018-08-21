@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\Repositories\UserRepository;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -18,7 +19,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        // dd($user);
         $this->middleware('auth');
+        $this->middleware('admin');
     }
 
     /**
