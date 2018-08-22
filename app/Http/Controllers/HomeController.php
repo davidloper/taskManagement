@@ -21,7 +21,7 @@ class HomeController extends Controller
     {
         // dd($user);
         $this->middleware('auth');
-        $this->middleware('admin');
+        $this->middleware('admin')->except('index');
     }
 
     /**
@@ -33,9 +33,9 @@ class HomeController extends Controller
     {   
         //dd(Carbon::now('Asia/Kuala_Lumpur')->addDay(2));
         $userId = Auth::user()->id;
-        $allTasks = Task::all();
+        $allTasks = Task::project()->get();
 
-        $completedTask = Task::where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
+        $completedTask = Task::project()->where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
 
         $newTasks = $allTasks->where('status','New');
         $startedTasks = $allTasks->where('status','Started');
