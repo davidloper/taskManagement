@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Auth;
+
 class Task extends Model
 {
     protected $fillable = [
@@ -15,6 +17,7 @@ class Task extends Model
     	'duration_number',
     	'duration_type',
     	'status',
+        'project_id',
     ];
     
     
@@ -39,6 +42,9 @@ class Task extends Model
     }
     public function getStatusAttribute($value){
         return ucwords($value);
+    }
+    public function scopeProject($query){
+        return $query->where('project_id',Auth::user()->project_id);
     }
 
 }

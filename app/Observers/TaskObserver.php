@@ -14,13 +14,19 @@ class TaskObserver
      * @return void
      */
     public function created(Task $task)
-    {
-        $notication = new Notification;
-        $notication->user_id = $task->assign_to;
-        $notication->task_id = $task->id;
-        $notication->title = $task->title;
-        $notication->description = $task->description;
-        $notication->save();
+    {   
+        if(strlen($task->title) > 50){
+            $task->title = substr($task->title, -(50 - strlen($task->title)));
+            $task->title = $task->title.'...'; 
+            // dd($task->title);
+            // dd(strlen($task->title));
+        }
+        $notification = new Notification;
+        $notification->user_id = $task->assign_to;
+        $notification->task_id = $task->id;
+        $notification->title = $task->title;
+        $notification->project_id = $task->project_id;
+        $notification->save();
 
     }
 

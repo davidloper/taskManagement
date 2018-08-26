@@ -31,12 +31,15 @@ class TaskController extends Controller
     	return view('pages.tasks.create',compact('users'));
     }
     public function store(Request $request){
+        if(Auth::user()->project_id == 0){
+            return redirect()->back()->with('error','You have be a the project');
+        }
         if($request->title && $request->description && $request->assign_to){
             $taskInfo = $request->all();
             $taskInfo['user_id'] = Auth::user()->id;
+            $taskInfo['user_id'] = Auth::user()->id;
             
-
-            Task::create($taskInfo);
+            Task::create($taskInfo + ['project_id' => Auth::user()->project_id]);
 
 
             return redirect('/home');

@@ -19,7 +19,10 @@ Route::middleware(['guest'])->group(function(){
 	Route::view('/','index');
 });
 
-Route::resource('/home', 'HomeController');
+Route::resources([
+	'home' => 'HomeController',
+	// 'task' => 'TaskController'
+]);
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
 
 #setting
@@ -36,7 +39,7 @@ Route::prefix('task')->group(function(){
 	Route::get('/autoComplete','TaskController@autoComplete');
 
 });
-	Route::resource('/task','TaskController');
+	Route::resource('/task','TaskController')->names(['create' =>'task.test']);
 
 #comment
 Route::post('/comment','CommentController@store');
