@@ -40,14 +40,17 @@
 			      	<div class="dropdown">
 					  <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
 					    Notification
+					    @if($notifications->count() > 0)
+					    	<span class="badge badge-danger">{{$notifications->count()}}</span>
+					    @endif
 					  </button>
 					  <div class="dropdown-menu">
 					  	@forelse($notifications as $notification)
 				    		<a class="dropdown-item" href="/task/{{$notification->task_id}}"><b>New Task! </b>{{$notification->title}}</a>
+				    		<a class="dropdown-item bg-info" href="/notifications/markAsSeen">Mark all as seen</a>
 				    	@empty
 				    	&nbsp;Nothing to show
 				    	@endforelse
-				    	<a class="dropdown-item" href="/notifications/markAsSeen"><b>Mark all as seen</b></a>
 					  </div>
 					</div>
 				</li>
