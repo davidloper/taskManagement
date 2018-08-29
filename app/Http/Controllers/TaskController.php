@@ -20,14 +20,24 @@ class TaskController extends Controller
 
     public function index(){
         $tasks = Task::all();
-        $tasks = $tasks->groupBy(function($date){
-            return Carbon::parse($date->created_at)->format('M Y');
-        });
+        // $tasks = $tasks->groupBy(function($date){
+        //     return Carbon::parse($date->created_at)->format('M Y');
+        // });
+        $completedTask = Task::project()->where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
 
-    	return view('pages.tasks.index',compact('tasks'));
+        $newTasks = $tasks->where('status','New');
+        $startedTasks = $tasks->where('status','Started');
+        
+
+    	return view('pages.tasks.index',compact('tasks','completedTask','newTasks','startedTasks'));
     }
     public function create(Request $request){
         $users = User::all();
+        // $tasks = Task::distinct()->get();
+        // $tasks1 = Task::all();
+        // // $tasks2 = Task:::;
+        // $tasks2 = \DB::table('tasks')->distinct('status')->pluck('status');
+        // dd($tasks,$tasks1,$tasks2); 
     	return view('pages.tasks.create',compact('users'));
     }
     public function store(Request $request){
