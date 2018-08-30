@@ -1,0 +1,20 @@
+task list
+-move task from home to task page
+
+- modify view page name to be correct
+
+- add account settings
+
+- add timeline
+
+-add admin panel
+
+-limit user action
+
+-user can attach image to task
+
+add carousel to guest page 
+
+- add graph to dashboard
+
+- add

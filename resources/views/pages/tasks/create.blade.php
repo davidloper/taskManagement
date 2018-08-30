@@ -1,9 +1,9 @@
 @extends('layouts.layout')
 
-@section('toggleBar')
-@include('pages.tasks.components.toggleBar')
-@endsection
+{{-- @section('toggleBar') --}}
+{{-- @endsection --}}
 @section('content')
+@include('pages.tasks.includes.breadcrumb')
 
 <div class= "row justify-content-center align-self-center">
 	<div class="col-lg-8">

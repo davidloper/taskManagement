@@ -32,22 +32,11 @@ class HomeController extends Controller
     public function index()
     {   
         //dd(Carbon::now('Asia/Kuala_Lumpur')->addDay(2));
-        $userId = Auth::user()->id;
+        // $userId = Auth::user()->id;
         $allTasks = Task::project()->get();
 
-        $completedTask = Task::project()->where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
-
-        $newTasks = $allTasks->where('status','New');
-        $startedTasks = $allTasks->where('status','Started');
-        // $ignoredTasks = Task::
-        // $taskStatistic;
-        //$taskStatistic ['ignored'] = Task::where('user_id',$userId)->sum('ignored');
-        //$taskStatistic ['completed'] = Task::where('user_id',$userId)->sum('completed');
-
-        // dd($newTasks);
         
-
-        return view('home',compact('completedTask','newTasks','startedTasks','taskStatistic'));
+        return view('pages.home',compact('completedTask','newTasks','startedTasks','taskStatistic'));
     }
     public function update(Request $request){
         
