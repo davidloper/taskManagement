@@ -13,7 +13,7 @@
     		<span class="navbar-toggler-icon"></span>
   		</button>
   		@php
-  		Auth::user()->project_id == 0? $name = 'DashBoard': $name = Auth::user()->projectUser->project->project_name;
+  		Auth::user()->project_id == 0? $name = 'DashBoard': $name = Auth::user()->projectUser->project->name;
   		@endphp
 	  	<a class="navbar-brand" href="/home"><h2>{{$name}}</h2></a>
 	  	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">

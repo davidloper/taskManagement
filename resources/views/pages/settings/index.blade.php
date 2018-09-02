@@ -21,7 +21,7 @@
 					<form action="/setting/createNewProject" method="post">
 						@csrf
 						<label>Create New Project</label>
-						<input class="form-control" type="text" placeholder="Project Name" name="project_name">
+						<input class="form-control" type="text" placeholder="Project Name" name="name">
 						<input class="btn" type="submit">
 					</form>	
 				</div>
@@ -33,7 +33,7 @@
 						<label>Switch Project</label>
 						<select class="form-control" name="project_id">
 							@forelse($projectUser as $val)
-								<option value="{{$val->project->id}}">{{$val->project->project_name}}</option>
+								<option value="{{$val->project->id}}">{{$val->project->name}}</option>
 							@empty
 								You have no project
 							@endforelse
