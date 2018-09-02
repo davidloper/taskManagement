@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // $this->call(UsersTableSeeder::class);
-        $this->call(CommentSeeder::class);
+    {   
+        $this->call(TruncateTable::class);
+        $this->call(UserSeeder::class);
     }
 }
