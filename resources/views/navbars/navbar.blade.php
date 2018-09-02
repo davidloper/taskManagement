@@ -45,8 +45,7 @@
 					  </button>
 					  <div class="dropdown-menu">
 					  	@forelse($notifications as $notification)
-				    		<a class="dropdown-item" href="/task/{{$notification->task_id}}"><b>New Task! </b>{{$notification->title}}</a>
-				    		<a class="dropdown-item bg-info" href="/notifications/markAsSeen">Mark all as seen</a>
+				    		<a class="dropdown-item" href="/task/{{$notification->task_id}}"><i style="color:#b7b7b7;"class="fas fa-tasks"></i>&nbsp;&nbsp;{{$notification->title}}</a>
 				    	@empty
 				    	&nbsp;Nothing to show
 				    	@endforelse
