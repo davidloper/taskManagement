@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\ProjectMessage;
+use App\Timeline;
+
 use App\Repositories\UserRepository;
 
 use Illuminate\Http\Request;
@@ -31,41 +34,31 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        //dd(Carbon::now('Asia/Kuala_Lumpur')->addDay(2));
-        // $userId = Auth::user()->id;
-        $allTasks = Task::project()->get();
-
-        
-        return view('pages.home',compact('completedTask','newTasks','startedTasks','taskStatistic'));
-    }
-    public function update(Request $request){
-        
-        $taskId = basename(request()->path());
-    
-        if($request->status === 'ignored'){
-            self::updateStatus($taskId,$request);
-            $request->session()->flash('success','Task Successfully Ingored!');
+        $projectMessages = ProjectMessage::where('project_id',Auth::user()->project_id)->get();
+        $completedTasks = Task::where('status','Completed')->get();
+        $completedTasks = $completedTasks->map(function($value){
+            $value->month = ($value->created_at)->format('M');
+            return  $value;
+        });
+        $now = Carbon::now();
+        $months = [];
+        for($i = 0; $i < 6; $i++){
+            
+            $num = 0;
+            foreach($completedTasks as $task){
+                if($task->month == $now->copy()->subMonths($i)->format('M')){
+                    $num += 1;
+                }
+                $months [$now->copy()->subMonths($i)->format('M')] = $num;
+            }
         }
-        if($request->status === 'started'){
-            self::updateStatus($taskId,$request);
-            $request->session()->flash('success','Task Successfully Started!');
-        }
-        if($request->status === 'awaiting approval'){
-            self::updateStatus($taskId,$request);
-            $request->session()->flash('success','Task Successfully Completed!');
-        }
-        if($request->status === 'removed'){
-            self::updateStatus($taskId,$request);
-            $request->session()->flash('success','Task Successfully Removed!');
-        }
-
-        $request->session()->flash('error','Something went wrong!');
-        
-    return redirect('home');
-    }
-    function updateStatus($taskId,$request){
-        $task = Task::find($taskId);
-            $task->status = $request->status;
-            $task->update();
+        $months = array_reverse($months);
+        $timelines = Timeline::orderBy('created_at','desc')->limit(5)->get();
+        $tasks = Task::orderBy('created_at','desc')->limit(5)->get();
+        $events = $timelines->merge($tasks);
+        // dd($timelines,$tasks,$events);
+        $events = $events->sortByDesc('created_at');
+        $events = $events->take(5);
+        return view('pages.home',compact('projectMessages','months','events'));
     }
 }

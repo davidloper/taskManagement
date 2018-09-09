@@ -24,6 +24,9 @@ class Task extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function assignToUser(){
+        return $this->belongsTo(User::class,'assign_to','id');   
+    }
     public function comment(){
         return $this->hasMany(Comment::class);
     }
@@ -31,6 +34,9 @@ class Task extends Model
         return $this->hasOne(Notification::class);
     }
 
+    public function setStatusAttribute($value){
+        $this->attributes['status'] = ucwords($value);
+    }
     public function getPriorityAttribute($value){
         if($value == 1){
             return 'Low';

@@ -1,21 +1,23 @@
 @extends('layouts.layout')
 
-{{-- @section('toggleBar') --}}
-{{-- @endsection --}}
 @section('content')
-@include('pages.tasks.includes.breadcrumb')
 
 <div class= "row justify-content-center align-self-center">
 	<div class="col-lg-8">
-		<form method="post" action="/task">
+		@if(Route::currentRouteName() == 'task.create')
+			<form method="post" action="/task">
+		@elseif(Route::currentRouteName() == 'task.edit')
+			<form method="post" action="/task/{{$task->id}}">
+			<input name="_method" type="hidden" value="PUT">
+		@endif
 		{{csrf_field()}}
 		  <div class="form-group">
 		    <label>Task Title</label>
-		    <input type="text" id="title" name="title" class="form-control">
+		    <input type="text" id="title" name="title" class="form-control" value="{{$task->title}}">
 		  </div>
 		  <div class="form-group">
 		    <label>Description</label>
-		    <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+		    <textarea class="form-control" id="description" name="description" rows="5">{{$task->description}}</textarea>
 		  </div>
 		  <div class="row">
 		  		<div class="col-lg-4 text-center">
@@ -23,9 +25,12 @@
 					  	<label>Assign to</label>
 							{{-- <input type="text" name="assign_to" class="form-control"> --}}
 							<select class="custom-select" id="assign_to" name="assign_to">
-									<option value="" selected hidden></option>
+									<option selected hidden></option>
 								@foreach($users as $user)
-									<option value="{{$user->id}}">{{$user->name}}</option>
+								@php 
+								$task->assign_to == $user->id? $selected = 'selected': $selected = '';
+								@endphp
+									<option value="{{$user->id}}" {{$selected}}>{{$user->name}}</option>
 								@endforeach
 							</select>
 					</div>
@@ -33,23 +38,37 @@
 				<div class="col-lg-4 text-center">
 					<label>Priority</label>
 					<select class="custom-select" id="priority" name="priority">
-						{{-- <option selected>Open this select menu</option> --}}
-						<option value="3">High</option>
-						<option value="2" selected>Medium</option>
-						<option value="1">Low</option>
+						@php
+							$values = ['1' => 'High','2' => 'Medium','3' => 'Low'];
+						@endphp
+						@foreach($values as $key => $value)
+							@php
+							$value == $task->priority? $selected = 'selected': $selected = '';
+							@endphp
+							<option value="{{$key}}" {{$selected}}>{{$value}}</option>	
+						@endforeach
 					</select>
 				</div>
 				<div class="col-lg-4 text-center">
 					<label>Estimated Duration</label>
 					<div class="row">
 						<div class="col-lg-6" style="padding-right: 0px">
-							<input type="text" class="form-control" id="duration_number" name="duration_number">
+							<input type="text" class="form-control" id="duration_number" name="duration_number" value="{{$task->duration_number}}">
 						</div>
 						<div class="col-lg-6" style="padding-left: 0px">
 							<select class="custom-select" id="duration_type" name="duration_type">
-								<option value="min">Min</option>
+								@php
+								$values = ['min','hour','day'];
+								@endphp
+								@foreach($values as $value)
+								@php
+									$value == $task->duration_type? $selected = 'selected': $selected = '';
+								@endphp
+								<option value="{{$value}}" {{$selected}}>{{ucfirst($value)}}</option>
+								@endforeach
+								{{-- <option value="min">Min</option>
 								<option value="hour" selected>Hour</option>
-								<option value="day">Day</option>
+								<option value="day">Day</option> --}}
 							</select>
 						</div>
 					</div>
@@ -62,6 +81,7 @@
 </div>
 <script>
 	$(function(){
+		$('#title').focus();
 		$('#createTaskBtn').click(function(){
 			if($('#title').val() === ""){
 				alert('Please enter title');

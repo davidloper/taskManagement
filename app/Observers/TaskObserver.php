@@ -4,7 +4,9 @@ namespace App\Observers;
 
 use App\Task;
 use App\Notification;
+use App\Timeline;
 
+use Auth;
 class TaskObserver
 {
     /**
@@ -13,13 +15,12 @@ class TaskObserver
      * @param  \App\Task  $task
      * @return void
      */
+
     public function created(Task $task)
     {   
         if(strlen($task->title) > 50){
             $task->title = substr($task->title, -(50 - strlen($task->title)));
             $task->title = $task->title.'...'; 
-            // dd($task->title);
-            // dd(strlen($task->title));
         }
         $notification = new Notification;
         $notification->user_id = $task->assign_to;
@@ -36,9 +37,20 @@ class TaskObserver
      * @param  \App\Task  $task
      * @return void
      */
-    public function updated(Task $task)
+    public function updating(Task $task)
     {
-        // dd(2);
+        $originalStatus = $task->getOriginal('status');
+        $updatedStatus = $task->getAttribute('status');
+
+        if($originalStatus !== $updatedStatus){
+            $user = Auth::user();
+            $timeline = new Timeline;
+            $timeline->user_id = $user->id;
+            $timeline->project_id = $user->project_id;
+            $timeline->task_id = $task->id;
+            $timeline->action = $updatedStatus;
+            $timeline->save();
+        }
     }
 
     /**

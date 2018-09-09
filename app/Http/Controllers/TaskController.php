@@ -16,29 +16,23 @@ class TaskController extends Controller
 {
     public function __construct(){
     	$this->middleware('auth');
+        $this->middleware('admin')->only(['create','store','edit','update','admin','destroy']);
     }
 
     public function index(){
-        $tasks = Task::all();
-        // $tasks = $tasks->groupBy(function($date){
-        //     return Carbon::parse($date->created_at)->format('M Y');
-        // });
-        $completedTask = Task::project()->where('status','awaiting approval')->orWhere('status','rejected')->orWhere('status','approved')->get();
+        $tasks = Task::project()->where('assign_to',Auth::id())->get();
+
+        $completedTask = Task::project()->where('assign_to',Auth::id())->where('status','Awaiting Approval')->orWhere('status','Rejected')->orWhere('status','Approved')->get();
 
         $newTasks = $tasks->where('status','New');
         $startedTasks = $tasks->where('status','Started');
         
-
     	return view('pages.tasks.index',compact('tasks','completedTask','newTasks','startedTasks'));
     }
     public function create(Request $request){
         $users = User::all();
-        // $tasks = Task::distinct()->get();
-        // $tasks1 = Task::all();
-        // // $tasks2 = Task:::;
-        // $tasks2 = \DB::table('tasks')->distinct('status')->pluck('status');
-        // dd($tasks,$tasks1,$tasks2); 
-    	return view('pages.tasks.create',compact('users'));
+        $task = new Task;    
+    	return view('pages.tasks.admin_create_edit',compact('users','task'));
     }
     public function store(Request $request){
         if(Auth::user()->project_id == 0){
@@ -49,11 +43,29 @@ class TaskController extends Controller
             $taskInfo['user_id'] = Auth::user()->id;
             $taskInfo['user_id'] = Auth::user()->id;
             
-            Task::create($taskInfo + ['project_id' => Auth::user()->project_id]);
+            $task = Task::create($taskInfo + ['project_id' => Auth::user()->project_id]);
 
 
-            return redirect('/home');
         }
+        return redirect('/task/'.$task->id);
+    }
+    public function edit($id){
+        $task = Task::find($id);
+        $users = User::where('project_id',Auth::user()->project_id)->get();
+
+        return view('pages.tasks.admin_create_edit',compact('task','users'));
+    }
+    public function update($id,Request $request){
+        $task = Task::find($id);
+        $task->update($request->all());
+        return redirect('/task/'.$id);
+    }
+    public function destroy($id){
+        Notification::where('task_id',$id)->delete();
+        Timeline::where('task_id',$id)->delete();
+        Comment::where('task_id',$id)->delete();
+        $task = Task::destroy($id);
+        return redirect()->back();
     }
     public function show($id,Request $request){
         $task = Task::find($id);
@@ -66,11 +78,34 @@ class TaskController extends Controller
         return view('pages.tasks.show',compact('task','comments'));
     }
     public function autoComplete(Request $request){
-        // \Log::debug($request);
         $id = $request->id;
         $task = Task::where('id','LIKE','%'.$id.'%')->limit(5)->get();
         \Log::debug($task);
         return response()->json($task);
+    }
+    public function changeStatus($id,Request $request){
+        $task = Task::find($id);
+        $task->status = $request->status;
+        // switch($request->status){
+        //     case 'started':
+
+        //         $task->status = 'started';
+        //         break;
+        //     case 'ignored':
+        //         $task->status = 'ignored';
+        //         break;
+        //     case 'awaiting approval':
+        //         $task->status = 'awaiting approval';
+        //         break;
+        //     case 'approved';
+        // }
+        $task->update();
+        return redirect()->back();
+    }
+    public function admin(){
+        $projectTasks = Task::project()->get();
+
+        return view('pages.tasks.admin_index',compact('projectTasks'));
     }
 
 }
