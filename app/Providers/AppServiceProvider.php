@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function notifications(){
     view()->composer('navbars.navbar', function() {
         $notifications = Notification::notSeen()->project()->limit(10)->get();
+        // $notifications = Notification::notSeen()->project()->limit(10)->get();
         view()->share('notifications', $notifications);
     });
   }
