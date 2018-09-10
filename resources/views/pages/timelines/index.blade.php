@@ -13,7 +13,6 @@ $now = \Carbon\Carbon::now();
       </thead>
       <tbody>
         @foreach($timeline as $key2 => $tl)
-             {{-- {{ dd($tl->task->title) }} --}}
           @if(isset($tl->task->title))
             <tr>
               <td>
@@ -25,7 +24,11 @@ $now = \Carbon\Carbon::now();
               </td>
               <td>
               <button class="btn btn-success btn-sm">{{$tl->user->name}}</button>
-               {{$tl->action}} task 
+              @if(strcasecmp($tl->action,'awaiting approval') == 0)
+              completed task
+              @else
+               {{strtolower($tl->action)}} task
+              @endif 
               <button class="btn btn-secondary btn-sm">{{$tl->task->title}}</button>
               </td>
             </tr>

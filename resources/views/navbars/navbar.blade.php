@@ -13,36 +13,34 @@
     		<span class="navbar-toggler-icon"></span>
   		</button>
   		@php
-  		Auth::user()->project_id == 0? $name = 'DashBoard': $name = Auth::user()->projectUser->project->name;
+  		// dd(Auth::user()->project->name);
+  		Auth::user()->project_id == 0? $name = 'DashBoard': $name = Auth::user()->project->name;
   		@endphp
 	  	<a class="navbar-brand" href="/home"><h2 style="margin: 2px 5px 2px">{{$name}}</h2></a>
 	  	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-	    	<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-		      	<li class="nav-item">
-		      		<a class="btn btn-light" href="/task">My Task</a>
-			      	{{-- <div class="dropdown"> --}}
-					  {{-- <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
-					    Task
-					  </button>
-					  <div class="dropdown-menu">
-					    <a class="dropdown-item" href="/task">Show Task</a>
-					    <a class="dropdown-item" href="/task/create">Create Task</a>
-					  </div> --}}
-					{{-- </div> --}}
-				</li>
-				<li class="nav-item">
-					<a class="btn btn-light" href="/timeline">Timeline</a>
-				</li>
-				<li class="nav-item">
-					<div class="dropdown">
-						<button class="btn btn-light dropdown-toggle" data-toggle="dropdown" type="button">Admin</button>
-						<div class="dropdown-menu">
-						  <a class="dropdown-item" href="/admin/project-message">Project Message</a>
-						  <a class="dropdown-item" href="/task/create">Create Task</a>
-						  <a class="dropdown-item" href="/task/admin">Manage Task</a>
-						</div>
-					</div>
-				</li>
+		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+	  		@if(Auth::user()->project_id != 0) 
+		      <li class="nav-item">
+		      	<a class="btn btn-light" href="/task">My Task</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn btn-light" href="/timeline">Timeline</a>
+					</li>
+					@if(Auth::user()->projectUser->user_level > 0)
+						<li class="nav-item">
+							<div class="dropdown">
+								<button class="btn btn-light dropdown-toggle" data-toggle="dropdown" type="button">Admin</button>
+								<div class="dropdown-menu">
+								  {{-- <a class="dropdown-item" href="/admin/project-message">Project Message</a> --}}
+								  <a class="dropdown-item" href="/admin/project-setting">Project Setting</a>
+								  <hr>
+								  <a class="dropdown-item" href="/task/create">Create Task</a>
+								  <a class="dropdown-item" href="/task/admin">Manage Task</a>
+								</div>
+							</div>
+						</li>
+					@endif
+				@endif
 				<li class="nav-item">
 			      	<div class="dropdown">
 					  <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
