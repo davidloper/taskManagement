@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use\App\Task;
 use\App\User;
+use\App\Notification;
+use\App\Timeline;
 use App\Comment;
 
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class TaskController extends Controller
     public function index(){
         $tasks = Task::project()->where('assign_to',Auth::id())->get();
 
-        $completedTask = Task::project()->where('assign_to',Auth::id())->where('status','Awaiting Approval')->orWhere('status','Rejected')->orWhere('status','Approved')->get();
+        $completedTask = Task::project()->where('assign_to',Auth::id())->where('status','Awaiting Approval')->orWhere('status','Rejected')->project()->orWhere('status','Approved')->project()->get();
 
         $newTasks = $tasks->where('status','New');
         $startedTasks = $tasks->where('status','Started');
@@ -44,8 +46,6 @@ class TaskController extends Controller
             $taskInfo['user_id'] = Auth::user()->id;
             
             $task = Task::create($taskInfo + ['project_id' => Auth::user()->project_id]);
-
-
         }
         return redirect('/task/'.$task->id);
     }
@@ -79,26 +79,13 @@ class TaskController extends Controller
     }
     public function autoComplete(Request $request){
         $id = $request->id;
-        $task = Task::where('id','LIKE','%'.$id.'%')->limit(5)->get();
+        $task = Task::where('project_id',Auth::user()->project_id)->where('id','LIKE','%'.$id.'%')->limit(5)->get();
         \Log::debug($task);
         return response()->json($task);
     }
     public function changeStatus($id,Request $request){
         $task = Task::find($id);
         $task->status = $request->status;
-        // switch($request->status){
-        //     case 'started':
-
-        //         $task->status = 'started';
-        //         break;
-        //     case 'ignored':
-        //         $task->status = 'ignored';
-        //         break;
-        //     case 'awaiting approval':
-        //         $task->status = 'awaiting approval';
-        //         break;
-        //     case 'approved';
-        // }
         $task->update();
         return redirect()->back();
     }

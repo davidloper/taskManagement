@@ -19,12 +19,12 @@ class CheckAdmin
     public function handle($request, Closure $next)
     {   
         $projectId = Auth::user()->project_id;
-        // dd($projectId);
         $projectUser = ProjectUser::where('project_id',$projectId)->where('user_id',Auth::id())->first();
 
-        if($projectUser->user_level === 1){
+        if($projectUser && $projectUser->user_level > 0){
             return $next($request);
+        }else{
+            return redirect('/home');
         }
-        return redirect('/home');
     }
 }
