@@ -45,7 +45,7 @@ Route::prefix('admin')->group(function(){
 	Route::get('/project-setting','ProjectController@index');
 });
 Route::get('/task/admin','TaskController@admin');
-Route::resource('/task','TaskController')->names(['create' =>'task.create']);
+Route::resource('/tasks','TaskController')->names(['create' =>'task.create']);
 
 #comment
 Route::post('/comment','CommentController@store');

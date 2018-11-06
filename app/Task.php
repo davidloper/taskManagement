@@ -9,15 +9,7 @@ use Auth;
 class Task extends Model
 {
     protected $fillable = [
-    	'user_id',
-    	'title',
-    	'description',
-    	'assign_to',
-    	'priority',
-    	'duration_number',
-    	'duration_type',
-    	'status',
-        'project_id',
+    	'id'
     ];
     
     
@@ -34,23 +26,12 @@ class Task extends Model
         return $this->hasOne(Notification::class);
     }
 
-    public function setStatusAttribute($value){
-        $this->attributes['status'] = ucwords($value);
+    public function scopeUser($query){
+        return $query->where('project_id',UserId());
     }
-    public function getPriorityAttribute($value){
-        if($value == 1){
-            return 'Low';
-        }elseif($value == 2){
-            return 'Medium';
-        }elseif($value == 3){
-            return 'High';
-        }
-    }
-    public function getStatusAttribute($value){
-        return ucwords($value);
-    }
+
     public function scopeProject($query){
-        return $query->where('project_id',Auth::user()->project_id);
+        return $query->where('project_id',projectId());
     }
 
 }
