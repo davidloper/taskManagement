@@ -9,10 +9,7 @@ use Auth;
 class Notification extends Model
 {
     protected $fillable = [
-    	'user_id',
-    	'task_id',
-		'title',
-		'description',
+    	'id'
 	];
 	public function scopeNotSeen($query){
 		return $query->where('seen',0);

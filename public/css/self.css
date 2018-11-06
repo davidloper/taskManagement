@@ -1,0 +1,18 @@
+/*container height*/
+.con-min-height{
+  min-height:80vh;
+}
+/*top margin small*/
+.top-spacing-s{
+  margin-top:12px;
+}
+
+/*top margin large*/
+.top-spacing-l{
+  margin-top:30px;
+}
+
+/*cursor pointer*/
+.pointer{
+  cursor:pointer;
+}

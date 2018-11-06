@@ -8,7 +8,7 @@ class ProjectUser extends Model
 {
 	protected $cast = ['user_level' => 'int'];
 
-	protected $fillable = ['user_id','project_id'];
+	protected $guarded = ['id'];
     public function project(){
     	return $this->belongsTo(Project::class);
     }

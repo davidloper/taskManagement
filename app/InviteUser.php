@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class InviteUser extends Model
 {
-    protected $fillable = [
-        'project_id',
-        'to_user_id',
-        'from_user_id'
+    protected $guarded = [
+      'id',
     ];
 
     public function toUser(){

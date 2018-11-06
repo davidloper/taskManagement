@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Timeline extends Model
 {
     protected $fillable = [
-      'user_id',
-      'project_id',
-      'content'
+      'id'
     ]; 
 
     public function user(){

@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-	protected $fillable = [
-		'task_id',
-		'user_id',
-		'comment',
+	protected $guarded = [
+    'id'
 	];
 
 	public function user(){

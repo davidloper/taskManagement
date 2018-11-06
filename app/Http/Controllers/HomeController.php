@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Task;
 use App\ProjectMessage;
 use App\Timeline;
+use App\InviteUser;
 
 use App\Repositories\UserRepository;
 
@@ -22,9 +23,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // dd($user);
         $this->middleware('auth');
-    // $this->middleware('admin')->except('index');
     }
 
     /**
@@ -33,38 +32,20 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        if(Auth::user()->project_id > 0){
-            $projectId = Auth::user()->project_id;
-            $projectMessages = ProjectMessage::where('project_id',$projectId)->get();
-            $completedTasks = Task::where('project_id',$projectId)->where('status','Completed')->get();
-            $completedTasks = $completedTasks->map(function($value){
-                $value->month = ($value->created_at)->format('M');
-                return  $value;
-            });
-            $now = Carbon::now();
-            $months = [];
-            for($i = 0; $i < 6; $i++){
-                
-                $num = 0;
-                foreach($completedTasks as $task){
-                    if($task->month == $now->copy()->subMonths($i)->format('M')){
-                        $num += 1;
-                    }
-                    $months [$now->copy()->subMonths($i)->format('M')] = $num;
-                }
-            }
-            $months = array_reverse($months);
-            $timelines = Timeline::where('project_id',$projectId)->orderBy('created_at','desc')->limit(5)->get();
-            $tasks = Task::where('project_id',$projectId)->orderBy('created_at','desc')->limit(5)->get();
-            $events = $timelines->merge($tasks);
-            // dd($timelines,$tasks,$events);
-            $events = $events->sortByDesc('created_at');
-            $events = $events->take(5);
-            return view('pages.home',compact('projectMessages','months','events'));
-        }
-        else{
-            return view ('pages.home');
-        }
+    {  
+        if(!projectId()) return self::noProjectIndex();
+        $messages = ProjectMessage::where('project_id',userId())->orderBy('created_at')->get()->groupBy(function($val){
+            return $val->user->name;
+        });
+        $rejectedTask = Task::project()->user()->where('status_id',status('rejected'))->orderBy('updated_at')->limit(10)->get();
+        $newtask = Task::project()->user()->where('status_id',status('new'))->orderByDesc('priority')->limit(10)->get();
+        $startedTask = Task::project()->user()->where('status_id',status('started'))->orderBy('created_at')->limit(10)->get();
+        $tasks = collect()->put('Rejected',$rejectedTask)->put('New',$newtask)->put('Started',$startedTask);
+        return view('pages.home',compact('messages','tasks'));
+    }
+
+    function noProjectIndex(){
+        $invitations = InviteUser::where('to_user_id',Auth::id())->get();
+        return view ('pages.home_no_project',compact('invitations'));
     }
 }
