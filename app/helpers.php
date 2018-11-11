@@ -19,7 +19,24 @@ function getStatus(int $id){
   return ucwords(array_flip($status)[$id]);
 }
 
+function getUserLevel(int $id){
+  $status = config('constants.userLevel');
+  return ucwords(array_flip($status)[$id]);
+}
+
 /*get priority from config*/
 function priority($name){
   return config('constants.priority.'.$name);
+}
+
+function dMY($Ymd){
+  return Carbon\Carbon::parse($Ymd)->format('d M Y');
+}
+
+function navTitle($segment1){
+  return config('constants.navbar2.'.$segment1.'.title');
+}
+
+function navChild($segment1){
+  return config('constants.navbar2.'.$segment1.'.child');
 }

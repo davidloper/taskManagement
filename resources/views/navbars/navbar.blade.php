@@ -1,4 +1,4 @@
-
+	
 <body>
 <style>
 .btn-light{
@@ -8,18 +8,18 @@
 	background-color:#f8f9fa !important;
 }
 .company-name{
-	color:#696969;padding: 2px 4px 2px; border:2px solid #A9A9A9;border-radius: 10px;
+	color:#696969;padding: 8px 10px 8px;border-radius: 10px;box-sizing: border-box;
 }
 .company-name:hover{
 	background-color:#DCDCDC;
 }
 
 </style>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="height:60px">
   		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     		<span class="navbar-toggler-icon"></span>
   		</button>
-	  	<a class="navbar-brand" href="/home"><h3 class="company-name">{{@Auth::user()->project->name}}</h3></a>
+	  	<a class="navbar-brand" href="/home"><h4 class="company-name"><i class="fas fa-home"></i>{{ ' ' }}{{@Auth::user()->project->name}}</h4></a>
 	  	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
 		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 	  		@if(projectId()) 
@@ -27,17 +27,17 @@
 		      	<a class="btn btn-light" href="/tasks"><i class="fas fa-tasks"></i>{{ ' ' }}My Task</a>
 					</li>
 					<li class="nav-item">
-						<a class="btn btn-light" href="/timeline"><i class="far fa-calendar-alt"></i>{{ ' ' }}Timeline</a>
+						<a class="btn btn-light" href="/timelines"><i class="far fa-calendar-alt"></i>{{ ' ' }}Timeline</a>
 					</li>
 					@if(Auth::user()->projectUser->user_level)
 						<li class="nav-item">
 							<div class="dropdown">
 								<button class="btn btn-light dropdown-toggle" data-toggle="dropdown" type="button">Admin</button>
 								<div class="dropdown-menu">
-								  <a class="dropdown-item" href="/admin/project-setting">Project Setting</a>
+								  <a class="dropdown-item" href="/admins/project">Project Setting</a>
 								  <hr>
-								  <a class="dropdown-item" href="/task/create">Create Task</a>
-								  <a class="dropdown-item" href="/task/admin">Manage Task</a>
+								  <a class="dropdown-item" href="/admins/tasks">Tasks</a>
+								  <a class="dropdown-item" href="/admins/tasks/create">Create Task</a>
 								</div>
 							</div>
 						</li>
@@ -60,10 +60,11 @@
 	    	<div class="form-inline my-2 my-lg-0">
 		      	<input type="text" class="form-control" id="taskSearch" placeholder="Search Task" aria-label="Search Task">
 	    	</div>
-	    	<a style="margin-left: 1%" class="btn btn-light nohover" href="/setting"><i class="fas fa-cog"></i>&nbsp;Setting</a>
+	    	<a style="margin-left: 1%" class="btn btn-light nohover" href="/settings"><i class="fas fa-cog"></i>&nbsp;Setting</a>
 			<a style="margin-left: 1%" class="btn btn-light nohover" href="/logout"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
   	</div>
 	</nav>
+
 <script>
 	$(function(){
 		$('#taskSearch').autocomplete({

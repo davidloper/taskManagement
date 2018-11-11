@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Task;
-use App\ProjectMessage;
-use App\Timeline;
-use App\InviteUser;
-
-use App\Repositories\UserRepository;
+use App\Repositories\ProjectMessageRepository;
+use App\Repositories\TaskRepository;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -16,14 +12,24 @@ use Auth;
 
 class HomeController extends Controller
 {
+    private $projectMessage;
+
+    private $task;
+
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        ProjectMessageRepository $projectMessage,
+        TaskRepository $task
+    )
     {
         $this->middleware('auth');
+        $this->projectMessage = $projectMessage;
+        $this->task = $task;
     }
 
     /**
@@ -34,12 +40,12 @@ class HomeController extends Controller
     public function index()
     {  
         if(!projectId()) return self::noProjectIndex();
-        $messages = ProjectMessage::where('project_id',userId())->orderBy('created_at')->get()->groupBy(function($val){
-            return $val->user->name;
-        });
-        $rejectedTask = Task::project()->user()->where('status_id',status('rejected'))->orderBy('updated_at')->limit(10)->get();
-        $newtask = Task::project()->user()->where('status_id',status('new'))->orderByDesc('priority')->limit(10)->get();
-        $startedTask = Task::project()->user()->where('status_id',status('started'))->orderBy('created_at')->limit(10)->get();
+
+        $messages = $this->projectMessage->messagesGrouped();
+        $rejectedTask = $this->task->rejected()->orderBy('updated_at')->limit(10)->get();
+        $newtask = $this->task->new()->orderBy('updated_at')->limit(10)->get();
+        $startedTask = $this->task->started()->orderBy('updated_at')->limit(10)->get();
+
         $tasks = collect()->put('Rejected',$rejectedTask)->put('New',$newtask)->put('Started',$startedTask);
         return view('pages.home',compact('messages','tasks'));
     }

@@ -9,7 +9,16 @@ use Auth;
 class Task extends Model
 {
     protected $fillable = [
-    	'id'
+        'user_id',
+        'project_id',
+        'title',
+    	'description',
+        'assign_to',
+        'priority',
+        'duration_number',
+        'duration_type',
+        'status_id',
+
     ];
     
     
@@ -19,7 +28,7 @@ class Task extends Model
     public function assignToUser(){
         return $this->belongsTo(User::class,'assign_to','id');   
     }
-    public function comment(){
+    public function comments(){
         return $this->hasMany(Comment::class);
     }
     public function notification(){
@@ -27,7 +36,7 @@ class Task extends Model
     }
 
     public function scopeUser($query){
-        return $query->where('project_id',UserId());
+        return $query->where('assign_to',UserId());
     }
 
     public function scopeProject($query){
