@@ -1,4 +1,4 @@
-@component('pages.components.card',['title' => 'My Task'])
+@component('pages.components.card',['title' => 'Task'])
 @slot('slot')
 <table class="table table-borderless table-striped table-hover">
     <tbody>

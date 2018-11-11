@@ -7,6 +7,14 @@
   margin-top:12px;
 }
 
+.top-spacing-xs{
+  margin-top:6px;
+}
+
+.top-spacing-m{
+  margin-top:20px;
+}
+
 /*top margin large*/
 .top-spacing-l{
   margin-top:30px;
@@ -15,4 +23,18 @@
 /*cursor pointer*/
 .pointer{
   cursor:pointer;
+}
+
+.task-l-b{
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.task-l{
+  /*font-weight: bold;*/
+  font-size: 1.2rem;
+}
+
+.task-xs{
+  font-size: 0.7rem;
 }

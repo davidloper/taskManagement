@@ -13,41 +13,52 @@ use Auth;
 
 class ProjectController extends Controller
 {
-    public function __construct(){
-      $this->middleware('auth');
-      $this->middleware('admin');
-    }
-    public function index(){
 
-      $projectUsers = ProjectUser::with('user')->where('project_id',Auth::user()->project_id)->get();
-      $project = Project::find(Auth::user()->project_id);
-      $projectMessages = ProjectMessage::where('project_id',Auth::user()->project_id)->get();
+  function index(){
+    $projectUser = ProjectUser::with('project')->where('user_id',Auth::id())->get();
+    $userProject = ProjectUser::with('user')
+      ->where('user_id','!=',Auth::id())
+      ->where('project_id',Auth::user()
+      ->project_id)->get();
+      $user = Auth::user();
+      $invitations = InviteUser::with(['fromUser','project'])->where('to_user_id',Auth::id())->get();
+    return view('pages.projects.index',compact('projectUser','userProject','user','invitations'));
+  }
 
-      $invitedUsers = InviteUser::with('toUser')->with('fromUser')->where('project_id',Auth::user()->project_id)->get();
-      // dd($invitedUsers);
-      // dd($invitedUsers);
-      return view('pages.admins.project_settings.index',compact('projectMessages','projectUsers','project','invitedUsers'));
-    }
-    public function changeProjectName($id, Request $request){
-      $project = Project::find($id);
-      $project->name = $request->name;
-      $project->update();
+  function store(Request $request){
+    $project = Project::create($request->all());
+    $projectUser = new ProjectUser;
+    $projectUser->project_id = $project->id;
+    $projectUser->user_id = Auth::id();
+    $projectUser->user_level = 2;
+    $projectUser->save();
+    
+    return redirect()->back()->with('success', 'Project successfully created');
+  }
 
-      return redirect()->back();
-    }
-    public function inviteUser (Request $request){
-      $user = User::find($request->to_user_id);
-      if($user){
-        $thisUser = Auth::user();
-        $inviteUser = InviteUser::firstOrCreate([
-          'project_id' => $thisUser->project_id,
-          'to_user_id' => $request->to_user_id,
-          'from_user_id' => $thisUser->id,
-        ]);
+  function switchProject (Request $request){
+    Auth::user()->project_id = $request->project_id;
+    Auth::user()->save();
+    return redirect()->back();
+  }
 
-        return redirect()->back()->with('success','invitation has sent');
-      }else{
-        return redirect()->back()->with('error','User not found');
+  function invitation (Request $request){
+      switch($request->type){
+          case 'accept':
+              $inviteUser = InviteUser::find($request->id);
+              $projectUser = new ProjectUser;
+              $projectUser->project_id = $inviteUser->project->id;
+              $projectUser->user_id = Auth::id();
+              $projectUser->user_level = 0;
+              $projectUser->save();
+              $inviteUser->delete();
+
+              break;
+          case 'reject':
+              InviteUser::destroy($request->id);
+              break;
       }
-    }
+      $successMsg = 'Invitation successfully '.$request->type.'ed';
+      return redirect()->back()->with('success',$successMsg);
+  }
 }

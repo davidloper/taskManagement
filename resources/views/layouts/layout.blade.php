@@ -1,4 +1,5 @@
 @include('includes.header')
 @include('navbars.navbar')
+@include('navbars.navbar_black')
 @yield('content')
 @include('includes.footer')
